@@ -167,11 +167,6 @@ express-mahasiswa/
 │   ├── jurusanController.js # Business logic Jurusan
 │   ├── mahasiswaController.js # Business logic Mahasiswa
 │   └── prodiController.js   # Business logic Prodi
-├── models/
-│   ├── index.js             # Relasi antar model (opsional jika masih tersedia)
-│   ├── Jurusan.js           # Model Jurusan (opsional jika masih tersedia)
-│   ├── Mahasiswa.js         # Model Mahasiswa (opsional jika masih tersedia)
-│   └── Prodi.js             # Model Prodi (opsional jika masih tersedia)
 ├── prisma/
 │   └── schema.prisma        # Schema Prisma untuk MySQL
 ├── routes/
@@ -258,11 +253,3 @@ Jurusan (1) ----<(Many)---- Prodi
 - **@prisma/client** - Prisma client untuk query database
 - **dotenv** - Environment variables
 - **nodemon** (dev) - Auto-reload development server
-
-## 📄 License
-
-ISC
-
----
-
-**Dibuat untuk Coding Camp**
