@@ -1,6 +1,6 @@
 # Express Mahasiswa API
 
-REST API untuk mengelola data mahasiswa, prodi, dan jurusan. Dibangun dengan **Express.js** dan **Sequelize ORM** dengan database **MySQL**.
+REST API untuk mengelola data mahasiswa, prodi, dan jurusan. Dibangun dengan **Express.js** dan **Prisma ORM** dengan database **MySQL**.
 
 ## 📋 Daftar Isi
 
@@ -39,7 +39,17 @@ REST API untuk mengelola data mahasiswa, prodi, dan jurusan. Dibangun dengan **E
    npm install
    ```
 
-3. **Buat file `.env`** di root project
+3. **Generate Prisma client**
+   ```bash
+   npx prisma generate
+   ```
+
+4. **Sync schema ke database**
+   ```bash
+   npx prisma db push
+   ```
+
+5. **Buat file `.env`** di root project
    ```bash
    cp .env.example .env  # Jika ada file .env.example
    # atau buat manual file .env
@@ -53,23 +63,17 @@ Buat file `.env` di root project dengan konfigurasi berikut:
 # Server
 PORT=3000
 
-# Database MySQL
-DB_HOST=localhost
-DB_PORT=3306
-DB_USER=root
-DB_PASS=password_anda
-DB_NAME=express_mahasiswa
+# Database MySQL (Prisma menggunakan DATABASE_URL)
+DATABASE_URL="mysql://root:password_anda@localhost:3306/express_mahasiswa"
 ```
 
 **Contoh untuk XAMPP/WAMP:**
 ```env
 PORT=3000
-DB_HOST=localhost
-DB_PORT=3306
-DB_USER=root
-DB_PASS=
-DB_NAME=express_mahasiswa
+DATABASE_URL="mysql://root:@localhost:3306/express_mahasiswa"
 ```
+
+Jika Anda ingin menggunakan kredensial lain, ganti `root`, `password_anda`, `localhost`, `3306`, dan `express_mahasiswa` sesuai konfigurasi MySQL Anda.
 
 ## 🚀 Menjalankan Aplikasi
 
@@ -158,16 +162,18 @@ curl -X DELETE http://localhost:3000/api/mahasiswa/1
 ```
 express-mahasiswa/
 ├── config/
-│   └── database.js          # Konfigurasi Sequelize
+│   └── database.js          # Konfigurasi Prisma Client
 ├── controllers/
 │   ├── jurusanController.js # Business logic Jurusan
 │   ├── mahasiswaController.js # Business logic Mahasiswa
 │   └── prodiController.js   # Business logic Prodi
 ├── models/
-│   ├── index.js             # Relasi antar model
-│   ├── Jurusan.js           # Model Jurusan
-│   ├── Mahasiswa.js         # Model Mahasiswa
-│   └── Prodi.js             # Model Prodi
+│   ├── index.js             # Relasi antar model (opsional jika masih tersedia)
+│   ├── Jurusan.js           # Model Jurusan (opsional jika masih tersedia)
+│   ├── Mahasiswa.js         # Model Mahasiswa (opsional jika masih tersedia)
+│   └── Prodi.js             # Model Prodi (opsional jika masih tersedia)
+├── prisma/
+│   └── schema.prisma        # Schema Prisma untuk MySQL
 ├── routes/
 │   ├── index.js             # Route aggregator
 │   ├── jurusan.js           # Route Jurusan
@@ -242,14 +248,14 @@ Jurusan (1) ----<(Many)---- Prodi
 - Verifikasi username dan password MySQL di `.env`
 
 ### Tabel tidak tercipta
-- Aplikasi menggunakan `sequelize.sync({ alter: true })` untuk auto-create/update tabel
-- Pastikan database sudah tercipta
+- Jalankan `npx prisma db push` untuk membuat tabel sesuai schema Prisma
+- Pastikan database sudah tercipta sebelum menjalankan perintah tersebut
 
 ## 📚 Dependencies
 
 - **express** - Web framework
-- **sequelize** - ORM untuk MySQL
-- **mysql2** - MySQL driver
+- **prisma** - Prisma CLI dan tooling
+- **@prisma/client** - Prisma client untuk query database
 - **dotenv** - Environment variables
 - **nodemon** (dev) - Auto-reload development server
 
